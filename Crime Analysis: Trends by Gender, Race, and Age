@@ -1,0 +1,60 @@
+# Crime Analysis SQL Project
+
+This project explores crime trends based on gender, race, and age using SQLite. The data was analyzed using SQL queries and visualized with Tableau.
+
+## 📊 Project Highlights
+- Identified the most common types of crimes
+- Analyzed average offender age by crime category
+- Examined crime distribution by gender and race
+- Prepared data for visualization in Tableau
+
+## 🛠️ Tools Used
+- SQL (SQLite)
+- Tableau
+- Git & GitHub
+
+## 📁 SQL Queries Included
+- `most_common_crimes.sql` – Frequency of each crime category
+- `average_age_by_crime.sql` – Average offender age per crime
+- `offender_race_distribution.sql` – Crime count by offender race
+- `gender_based_crime_analysis.sql` – Crime trends for male and female offenders
+
+## 📈 Visualization
+The insights from these queries were used to build an interactive Tableau dashboard available [here]https://public.tableau.com/views/CrimeAnalysisTrendsbyGenderRaceandAge/Dashboard1?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link).
+
+#### 📝 Below are my SQL queries:  
+```sql
+--Most common types of crimes
+
+SELECT Category, COUNT(*) as Crime_Count
+from BIT_DB.Crime
+GROUP BY Category
+ORDER BY Crime_Count DESC;
+
+--What is the average age of an offender and what crime did they commit?
+
+SELECT ROUND(AVG(offender_age),0) as offender_age, Category
+FROM BIT_DB.Crime
+GROUP BY Category
+ORDER BY offender_age desc;
+
+--What is the population distribution of offenders race?
+
+SELECT offender_race,COUNT(offender_race) as totals
+FROM BIT_DB.Crime
+GROUP BY offender_race
+ORDER BY totals desc;
+
+--What crimes did female offenders commit the most?
+SELECT Category,COUNT(offender_gender)as female_count
+FROM BIT_DB.Crime
+WHERE offender_gender='FEMALE'
+GROUP BY category
+ORDER BY female_count DESC;
+
+--What crimes did male offenders commit the most?
+SELECT category,COUNT(offender_gender)as male_count
+FROM BIT_DB.Crime
+WHERE offender_gender='MALE'
+GROUP BY category
+ORDER BY male_count DESC;
