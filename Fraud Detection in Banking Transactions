@@ -1,0 +1,72 @@
+# 📊 Banking Fraud Detection SQL Project
+
+## 🔍 Project Overview  
+This project analyzes banking transactions to detect fraudulent activities using SQL. The goal is to identify fraud patterns, high-risk accounts, and transaction behaviors based on historical data.
+
+## 📂 Dataset Information  
+- **Source:** Kaggle (Bank Transactions Dataset)  
+- **Contains:** Transaction details, fraud flags, account IDs, device types, and transaction amounts  
+- **Tech Stack:** SQLite, SQL  
+
+## 📝 Key Questions & SQL Queries  
+I used **SQL** to analyze the dataset and answer the following questions: 
+
+--Finding out whats in the dataset.
+
+SELECT*
+FROM BIT_DB.Bank_Transactions;
+
+--What is the total transaction amount flagged as fraudulent and how many?
+
+SELECT 
+    COUNT(*) AS Fraudulent_Transaction_Count, 
+    ROUND(SUM(Transaction_Amount), 0) AS Total_Fraud_Amount
+FROM BIT_DB.Bank_Transactions
+WHERE Fraud_Flag='TRUE';
+
+--What is the average transaction amount per transaction type?
+
+SELECT Transaction_Type,
+COUNT(*) AS Transaction_Count,
+ROUND(AVG(Transaction_Amount),0) AS Avg_Transaction_Amount
+FROM BIT_DB.Bank_Transactions
+GROUP BY Transaction_Type
+ORDER BY Avg_Transaction_Amount DESC;
+
+
+--Do fraudulent transactions tend to happen more with specific devices (Mobile/Desktop)?
+
+SELECT Device_Used, COUNT(*) AS Fraudulent_Transactions
+FROM BIT_DB.Bank_Transactions
+WHERE Fraud_Flag = 'TRUE'
+GROUP BY Device_Used
+ORDER BY Fraudulent_Transactions DESC;
+
+--Which account received the most fradulent transactions? and what was the total amount?
+
+SELECT Receiver_AccountID, COUNT(*) AS fraud_count, ROUND(SUM(Transaction_Amount),2) AS total_fraud_amount
+FROM BIT_DB.Bank_Transactions
+WHERE Fraud_Flag = 'TRUE'
+GROUP BY Receiver_AccountID
+ORDER BY fraud_count DESC
+LIMIT 1;
+
+--What device is used the most in fradulent activity?
+
+SELECT Device_Used, COUNT(*) AS Fraudulent_Usage
+FROM BIT_DB.Bank_Transactions
+WHERE Fraud_Flag = 'TRUE'
+GROUP BY Device_Used
+ORDER BY Fraudulent_Usage DESC;
+
+--How are transactions categorized based on their amount?
+
+SELECT 
+    Transaction_ID,
+    Transaction_Amount,
+    CASE 
+        WHEN Transaction_Amount < 500 THEN 'Low'
+        WHEN Transaction_Amount BETWEEN 500 AND 1000 THEN 'Medium'
+        ELSE 'High'
+    END AS Transaction_Category
+FROM BIT_DB.Bank_Transactions;
